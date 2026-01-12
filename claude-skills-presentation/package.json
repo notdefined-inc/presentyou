@@ -1,0 +1,18 @@
+{
+  "name": "Claude Skills",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "slidev",
+    "build": "slidev build",
+    "export": "slidev export"
+  },
+  "devDependencies": {
+    "@slidev/cli": "^0.49.0",
+    "@slidev/theme-default": "*",
+    "playwright-chromium": "^1.45.0"
+  },
+  "dependencies": {
+    "@slidev/theme-seriph": "^0.25.0"
+  }
+}

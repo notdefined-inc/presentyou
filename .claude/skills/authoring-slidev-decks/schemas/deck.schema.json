@@ -1,0 +1,104 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "deck.schema.json",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "mode",
+    "deck"
+  ],
+  "properties": {
+    "mode": {
+      "const": "build",
+      "description": "Must be set to 'build' for strict JSON output."
+    },
+    "deck": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "headmatter",
+        "slides"
+      ],
+      "properties": {
+        "headmatter": {
+          "type": "object",
+          "description": "Slidev headmatter (presentation-level frontmatter). Extra keys allowed for future Slidev options/themes.",
+          "properties": {},
+          "additionalProperties": true
+        },
+        "slides": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "no",
+              "frontmatter",
+              "content_md"
+            ],
+            "properties": {
+              "no": {
+                "type": "integer",
+                "minimum": 1,
+                "description": "Slide number (1-indexed)."
+              },
+              "filename": {
+                "type": "string",
+                "description": "Optional explicit file name under ./slides/ (e.g. 007.md)."
+              },
+              "frontmatter": {
+                "type": "object",
+                "description": "Slide frontmatter.",
+                "properties": {},
+                "additionalProperties": true
+              },
+              "content_md": {
+                "type": "string",
+                "description": "Markdown/Vue content for the slide body (no wrapping --- needed)."
+              },
+              "notes_md": {
+                "type": "string",
+                "description": "Presenter notes."
+              },
+              "assets": {
+                "type": "array",
+                "description": "Optional assets.",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "path",
+                    "kind"
+                  ],
+                  "properties": {
+                    "path": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "base64",
+                        "text",
+                        "copy"
+                      ]
+                    },
+                    "base64": {
+                      "type": "string"
+                    },
+                    "text": {
+                      "type": "string"
+                    },
+                    "from_path": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

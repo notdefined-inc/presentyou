@@ -1,0 +1,77 @@
+{
+    "deck": {
+        "headmatter": {
+            "title": "Claude Skills",
+            "theme": "seriph",
+            "highlighter": "shiki",
+            "lineNumbers": false,
+            "info": "Presentation about Claude Skills",
+            "drawings": {
+                "persist": false
+            },
+            "layout": "cover",
+            "background": "none"
+        },
+        "slides": [
+            {
+                "no": 1,
+                "frontmatter": {
+                    "layout": "cover",
+                    "class": "text-center text-slate-800"
+                },
+                "content_md": "<AnimatedBg />\n\n# Unlocking Agentic Superpowers\n\n<div class=\"text-3xl mt-6 font-light text-indigo-600\" v-motion\n  :initial=\"{ y: 50, opacity: 0 }\"\n  :enter=\"{ y: 0, opacity: 1, transition: { type: 'spring', stiffness: 250, damping: 20 } }\">\nThe World of Claude Skills\n</div>\n\n<div class=\"abs-br m-6 flex gap-2\">\n  <span class=\"text-sm text-slate-500\">Created with authoring-slidev-decks</span>\n</div>"
+            },
+            {
+                "no": 2,
+                "frontmatter": {
+                    "layout": "default",
+                    "class": "my-auto"
+                },
+                "content_md": "<AnimatedBg />\n\n# The Concept: Moving Beyond Chat\n\n<div class=\"grid grid-cols-2 gap-8 mt-12\">\n\n  <div v-click>\n    <FeatureCard color-class=\"text-indigo-600 border-indigo-200 bg-white/60 shadow-lg backdrop-blur-md\">\n      <template #title>Chat Mode 💬</template>\n      <p class=\"text-slate-600\">\"Here is the code, good luck!\"</p>\n      <br>\n      <ul class=\"list-disc ml-4 text-sm text-slate-600\">\n        <li>Passive advice</li>\n        <li>Requires user copy-paste</li>\n        <li>No file access</li>\n      </ul>\n    </FeatureCard>\n  </div>\n\n  <div v-click>\n    <FeatureCard color-class=\"text-teal-600 border-teal-200 bg-white/60 shadow-lg backdrop-blur-md\">\n      <template #title>Agentic Skill 🛠️</template>\n      <p class=\"text-slate-600\">\"I have built the deck for you.\"</p>\n      <br>\n      <ul class=\"list-disc ml-4 text-sm text-slate-600\">\n        <li>Active execution</li>\n        <li>Direct file manipulation</li>\n        <li>Self-correcting</li>\n      </ul>\n    </FeatureCard>\n  </div>\n\n</div>"
+            },
+            {
+                "no": 3,
+                "frontmatter": {
+                    "layout": "image-right",
+                    "image": "https://images.unsplash.com/photo-1556910103-1c02745a30bf?ixlib=rb-1.2.1&auto=format&fit=crop&w=1950&q=80"
+                },
+                "content_md": "# The Analogy\n\n### The Waiter vs. The Chef\n\n<br>\n\n<v-clicks>\n\n**The Waiter (LLM)** 💁\n- Takes your order\n- Polite and knowledgeable\n- *Cannot cook the food*\n\n<br>\n\n**The Chef (Skills)** 👨‍🍳\n- Has tools (Knives, Ovens)\n- Follows recipes (Workflows)\n- *Produces the meal*\n\n</v-clicks>\n\n<div class=\"mt-8 text-sm italic text-slate-500\" v-motion-roll-visible-bottom>\n\"Skills give the LLM a kitchen to work in.\"\n</div>\n\n<div class=\"absolute bottom-0 right-0 w-64 h-64 bg-gradient-to-tl from-orange-200 to-transparent rounded-full blur-3xl -z-10 animate-pulse\"></div>"
+            },
+            {
+                "no": 4,
+                "frontmatter": {
+                    "layout": "section"
+                },
+                "content_md": "<AnimatedBg />\n\n# Meet `authoring-slidev-decks`\n\n<div v-motion-pop-visible class=\"text-2xl mt-4 text-slate-600\">\nThe tool building *this* deck right now.\n</div>\n\n<div class=\"absolute top-10 right-10 w-32 h-32 bg-purple-300 rounded-full blur-2xl opacity-50 mix-blend-multiply filter animate-bounce\"></div>"
+            },
+            {
+                "no": 5,
+                "frontmatter": {
+                    "layout": "two-cols"
+                },
+                "content_md": "# Under the Hood\n\nSafe and deterministic.\n\n<div class=\"mt-8 scale-90 origin-top-left p-4 bg-white/50 rounded-xl shadow-sm border border-slate-100\">\n```mermaid\ngraph TD\n    U[👤 User] -->|Prompt| A[🤖 Agent]\n    A -->|Spec| J{JSON}\n    J -->|Pass| T[🛡️ Tools]\n    J -->|Fail| A\n    T -->|Validation| T\n    T -->|Render| S[✨ Slides]\n```\n</div>\n\n::right::\n\n<div class=\"mt-12\">\n  <StepList :steps=\"[\n    {title: 'Plan', desc: 'Brainstorm structure first'},\n    {title: 'Generate', desc: 'Create pure JSON specifications'},\n    {title: 'Render', desc: 'Python scripts build the files'}\n  ]\" />\n</div>"
+            },
+            {
+                "no": 6,
+                "frontmatter": {
+                    "layout": "two-cols"
+                },
+                "content_md": "# The Meta-Moment\n\nWe used the skill to generate this very slide.\n\n<br>\n\n**The Process:**\n<v-clicks>\n\n1. You approved the plan.\n2. I generated the specific JSON.\n3. The `render_deck.py` script built it.\n\n</v-clicks>\n\n::right::\n\n<div class=\"h-full flex items-center pr-4\">\n<div class=\"text-xs font-mono bg-slate-800 text-slate-200 p-4 rounded w-full overflow-hidden border border-slate-700 shadow-2xl\" \n     v-motion\n     :initial=\"{ x: 100, opacity: 0 }\"\n     :enter=\"{ x: 0, opacity: 1 }\">\n  <span class=\"text-slate-500\">// The JSON for this slide</span><br>\n  {\n    \"no\": 6,\n    \"frontmatter\": {\n       \"layout\": \"two-cols\"\n    },\n    \"content_md\": \"# The Meta-Moment...\"\n  }\n</div>\n</div>\n\n<div class=\"absolute bottom-10 left-10 w-40 h-40 bg-pink-200 rounded-full blur-3xl opacity-30 -z-10\"></div>"
+            },
+            {
+                "no": 7,
+                "frontmatter": {
+                    "layout": "center"
+                },
+                "content_md": "# Why It Matters\n\n<div class=\"grid grid-cols-3 gap-6 mt-12 text-center z-10 relative\">\n  <div v-click class=\"p-6 bg-white rounded-2xl shadow-xl transition hover:-translate-y-2 hover:shadow-2xl\">\n    <div class=\"text-5xl mb-4\">⚡</div>\n    <div class=\"font-bold text-lg text-slate-800\">Speed</div>\n    <div class=\"text-sm text-slate-500\">Minutes, not hours</div>\n  </div>\n  <div v-click class=\"p-6 bg-white rounded-2xl shadow-xl transition hover:-translate-y-2 hover:shadow-2xl\">\n    <div class=\"text-5xl mb-4\">🔒</div>\n    <div class=\"font-bold text-lg text-slate-800\">Safety</div>\n    <div class=\"text-sm text-slate-500\">Code execution sandbox</div>\n  </div>\n  <div v-click class=\"p-6 bg-white rounded-2xl shadow-xl transition hover:-translate-y-2 hover:shadow-2xl\">\n    <div class=\"text-5xl mb-4\">🎨</div>\n    <div class=\"font-bold text-lg text-slate-800\">Quality</div>\n    <div class=\"text-sm text-slate-500\">Professional design</div>\n  </div>\n</div>\n\n<div class=\"absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-gradient-to-r from-cyan-100/50 via-purple-100/50 to-pink-100/50 -z-0 blur-3xl\"></div>"
+            },
+            {
+                "no": 8,
+                "frontmatter": {
+                    "layout": "end"
+                },
+                "content_md": "<AnimatedBg />\n\n# Thank You\n\nBuild your own skills today."
+            }
+        ]
+    }
+}

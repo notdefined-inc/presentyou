@@ -1,0 +1,25 @@
+{
+    "name": "claude-skills-presentation-you",
+    "version": "1.0.0",
+    "description": "Orchestrates creation of beautiful Slidev presentation decks using deterministic rules.",
+    "type": "mcp-server",
+    "tools": [
+        {
+            "name": "init_project",
+            "description": "Initialize a new Slidev project with the correct structure and dependencies.",
+            "command": "python3 .claude/skills/authoring-slidev-decks/scripts/init_slidev_project.py"
+        },
+        {
+            "name": "render_deck",
+            "description": "Render a deterministic JSON deck specification into Slidev markdown files.",
+            "command": "python3 .claude/skills/authoring-slidev-decks/scripts/render_deck.py"
+        },
+        {
+            "name": "validate_deck",
+            "description": "Validate a deck.json against the schema.",
+            "command": "python3 .claude/skills/authoring-slidev-decks/scripts/validate.py"
+        }
+    ],
+    "author": "Claude",
+    "license": "MIT"
+}
