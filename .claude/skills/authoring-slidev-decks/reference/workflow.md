@@ -12,22 +12,21 @@
 - **Format**: JSON only. No explanation text outside the JSON block if possible.
 - **Validation**:
   ```bash
-  python tools/validate.py --stdin --schema patch <<'JSON'
+  python .claude/skills/authoring-slidev-decks/scripts/validate.py --stdin --schema patch <<'JSON'
   { ... }
   JSON
   ```
 
 ## 3. Apply Changes
 **Goal**: Update the filesystem deterministically.
-- Use `tools/apply_patch.py` for single slides.
-- Use `tools/render_deck.py` for full deck synchronizing.
+- Use `.claude/skills/authoring-slidev-decks/scripts/apply_patch.py` for single slides.
+- Use `.claude/skills/authoring-slidev-decks/scripts/render_deck.py` for full deck synchronizing.
 
 ## 4. Audit & Review
-**Goal**: Ensure the generated slides match the `deck.json` source of truth.
-- Run `python tools/audit.py` to check for drift.
-- If drift is found, ask the user if they want to sync to `deck.json` or update `deck.json` from current slides.
+**Goal**: Ensure the generated slides have no broken references and stay in sync.
+- Run `python .claude/skills/authoring-slidev-decks/scripts/audit.py --project <path>` to check structure and (if present) compare `deck.json` vs `slides.md` ordering.
 
 ## 5. Export
 **Goal**: Produce the final artifacts.
-- PPTX: `python tools/export.py --format pptx`
-- PDF: `python tools/export.py --format pdf`
+- PPTX: `python .claude/skills/authoring-slidev-decks/scripts/export.py --project <path> --format pptx`
+- PDF: `python .claude/skills/authoring-slidev-decks/scripts/export.py --project <path> --format pdf`

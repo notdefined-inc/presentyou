@@ -18,11 +18,22 @@ def to_yaml(obj: dict) -> str:
     import yaml
     return yaml.safe_dump(obj, sort_keys=False, allow_unicode=True).strip()
 
+def resolve_in_project(root: Path, rel: str) -> Path:
+    p = Path(rel)
+    if p.is_absolute():
+        raise ValueError(f"Absolute paths are not allowed: {rel}")
+    resolved = (root / p).resolve()
+    try:
+        resolved.relative_to(root)
+    except ValueError as e:
+        raise ValueError(f"Path escapes project root: {rel}") from e
+    return resolved
+
 
 def write_asset(root: Path, asset: Dict[str, Any]) -> None:
     """Write an asset (base64, text, or copy) to the project."""
     rel = asset["path"]
-    out = (root / rel).resolve()
+    out = resolve_in_project(root, rel)
     out.parent.mkdir(parents=True, exist_ok=True)
     kind = asset["kind"]
     if kind == "base64":
@@ -34,7 +45,7 @@ def write_asset(root: Path, asset: Dict[str, Any]) -> None:
     elif kind == "copy":
         src = asset.get("from_path")
         if src:
-            srcp = (root / src).resolve()
+            srcp = resolve_in_project(root, src)
             if srcp.exists():
                 out.write_bytes(srcp.read_bytes())
 
@@ -129,12 +140,23 @@ Examples:
     slides_dir = project_root / "slides"
     slides_dir.mkdir(parents=True, exist_ok=True)
 
-    max_no = 0
-    for s in slides:
+    slides_sorted = sorted(slides, key=lambda s: int(s["no"]))
+    slide_entries: List[tuple[int, str]] = []
+
+    for s in slides_sorted:
         no = int(s["no"])
-        max_no = max(max_no, no)
         fn = s.get("filename") or f"{no:03d}.md"
-        out = slides_dir / fn
+        if Path(fn).name != fn:
+            raise ValueError(f"Invalid slide filename (must be a basename): {fn}")
+        if not fn.endswith(".md"):
+            raise ValueError(f"Invalid slide filename (must end with .md): {fn}")
+
+        out = (slides_dir / fn).resolve()
+        try:
+            out.relative_to(slides_dir.resolve())
+        except ValueError as e:
+            raise ValueError(f"Slide path escapes slides directory: {fn}") from e
+
         out.write_text(
             render_slide_file(
                 frontmatter=s.get("frontmatter", {}) or {},
@@ -144,6 +166,7 @@ Examples:
             encoding="utf-8",
         )
         print(f"  ✅ Wrote {fn}")
+        slide_entries.append((no, fn))
 
     # Rebuild slides.md entry point
     entry_lines: List[str] = []
@@ -156,8 +179,7 @@ Examples:
     entry_lines.append("> Auto-generated. Do not hand-edit if you are using the JSON pipeline.")
     entry_lines.append("")
 
-    for no in range(1, max_no + 1):
-        fn = f"{no:03d}.md"
+    for _, fn in slide_entries:
         entry_lines.append("---")
         entry_lines.append(f"src: ./slides/{fn}")
         entry_lines.append("---")

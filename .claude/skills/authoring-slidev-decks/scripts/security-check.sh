@@ -5,13 +5,14 @@ INPUT="${1:-}"
 
 # Allowlist patterns (tight on purpose)
 ALLOW_PATTERNS=(
-  '^python3? tools/(deck_init|validate|apply_patch|render_deck|read_slide|list_slides|audit|export)\.py(\s|$)'
-  '^npm run (dev|build|export:pptx|export:pdf)(\s|$)'
+  '^python3? (\./)?\.claude/skills/authoring-slidev-decks/scripts/(init_slidev_project|validate|slidev_introspect|apply_patch|render_deck|read_slide|list_slides|audit|export)\.py(\s|$)'
+  '^npm (install|ci)(\s|$)'
+  '^npm run (dev|build|export)(\s|$)'
   '^pnpm (dev|build)(\s|$)'
-  '^node tools/.*(\s|$)'
+  '^npx --no-install slidev (dev|build|export)(\s|$)'
   '^ls(\s|$)'
   '^pwd(\s|$)'
-  '^cat (\.\/)?(deck\.json|llm\/out\/.*\.json)(\s|$)'
+  '^cat (\.\/)?(deck\.json|llm\/out\/.*\.json|slides\.md|slides\/.*\.md)(\s|$)'
   '^mkdir -p'
 )
 

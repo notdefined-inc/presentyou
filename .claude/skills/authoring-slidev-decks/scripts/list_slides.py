@@ -2,6 +2,7 @@
 """
 List all slides with their titles.
 """
+import argparse
 import re
 from pathlib import Path
 
@@ -13,8 +14,12 @@ def get_title(content: str) -> str:
     return "(No title)"
 
 def main() -> None:
-    root = Path(__file__).resolve().parents[1]
-    slides_dir = root / "slides"
+    ap = argparse.ArgumentParser(description="List slides in a Slidev project")
+    ap.add_argument("--project", "-p", required=True, help="Path to Slidev project directory")
+    args = ap.parse_args()
+
+    project_root = Path(args.project).resolve()
+    slides_dir = project_root / "slides"
     
     if not slides_dir.exists():
         print("No slides directory found.")

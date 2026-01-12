@@ -18,11 +18,22 @@ def to_yaml(obj: dict) -> str:
     import yaml
     return yaml.safe_dump(obj, sort_keys=False, allow_unicode=True).strip()
 
+def resolve_in_project(root: Path, rel: str) -> Path:
+    p = Path(rel)
+    if p.is_absolute():
+        raise ValueError(f"Absolute paths are not allowed: {rel}")
+    resolved = (root / p).resolve()
+    try:
+        resolved.relative_to(root)
+    except ValueError as e:
+        raise ValueError(f"Path escapes project root: {rel}") from e
+    return resolved
+
 
 def write_asset(root: Path, asset: Dict[str, Any]) -> None:
     """Write an asset (base64, text, or copy) to the project."""
     rel = asset["path"]
-    out = (root / rel).resolve()
+    out = resolve_in_project(root, rel)
     out.parent.mkdir(parents=True, exist_ok=True)
     kind = asset["kind"]
     if kind == "base64":
@@ -35,7 +46,7 @@ def write_asset(root: Path, asset: Dict[str, Any]) -> None:
     elif kind == "copy":
         src = asset.get("from_path")
         if src:
-            srcp = (root / src).resolve()
+            srcp = resolve_in_project(root, src)
             if srcp.exists():
                 out.write_bytes(srcp.read_bytes())
 
@@ -117,6 +128,10 @@ Examples:
 
     no = int(patch["no"])
     fn = patch.get("filename") or f"{no:03d}.md"
+    if Path(fn).name != fn:
+        raise ValueError(f"Invalid slide filename (must be a basename): {fn}")
+    if not fn.endswith(".md"):
+        raise ValueError(f"Invalid slide filename (must end with .md): {fn}")
     
     # Write assets to project
     for a in patch.get("assets", []) or []:
@@ -125,7 +140,11 @@ Examples:
     # Write slide to project/slides/
     slides_dir = project_root / "slides"
     slides_dir.mkdir(parents=True, exist_ok=True)
-    out = slides_dir / fn
+    out = (slides_dir / fn).resolve()
+    try:
+        out.relative_to(slides_dir.resolve())
+    except ValueError as e:
+        raise ValueError(f"Slide path escapes slides directory: {fn}") from e
     
     out.write_text(
         render_slide(

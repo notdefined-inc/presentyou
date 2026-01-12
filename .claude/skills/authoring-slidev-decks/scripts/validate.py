@@ -9,9 +9,37 @@ import sys
 from pathlib import Path
 from jsonschema import validate, ValidationError
 
-def validate_json(data: dict, schema_path: Path) -> None:
+def validate_json(instance: dict, schema_path: Path) -> None:
     schema = json.loads(schema_path.read_text(encoding="utf-8"))
-    validate(instance=data, schema=schema)
+    validate(instance=instance, schema=schema)
+
+
+def _wrap_deck(data: dict) -> tuple[dict, list[str]]:
+    warnings: list[str] = []
+    if "deck" in data:
+        if "mode" not in data:
+            warnings.append("Missing top-level 'mode'; assuming 'build' for validation.")
+        return {"mode": data.get("mode", "build"), "deck": data["deck"]}, warnings
+
+    if "headmatter" in data and "slides" in data:
+        warnings.append("Input is a raw deck object; wrapping into {'mode':'build','deck':...} for validation.")
+        return {"mode": "build", "deck": data}, warnings
+
+    raise ValueError("Deck JSON must contain either {'deck': ...} or a raw {'headmatter': ..., 'slides': ...} object.")
+
+
+def _wrap_patch(data: dict) -> tuple[dict, list[str]]:
+    warnings: list[str] = []
+    if "patch" in data:
+        if "mode" not in data:
+            warnings.append("Missing top-level 'mode'; assuming 'build' for validation.")
+        return {"mode": data.get("mode", "build"), "patch": data["patch"]}, warnings
+
+    if {"no", "frontmatter", "content_md"} <= set(data.keys()):
+        warnings.append("Input is a raw patch object; wrapping into {'mode':'build','patch':...} for validation.")
+        return {"mode": "build", "patch": data}, warnings
+
+    raise ValueError("Patch JSON must contain either {'patch': ...} or a raw {'no', 'frontmatter', 'content_md'} object.")
 
 def main() -> None:
     ap = argparse.ArgumentParser()
@@ -30,7 +58,7 @@ def main() -> None:
             sys.exit(1)
         content = p.read_text(encoding="utf-8")
     else:
-        print("Usage: python tools/validate.py <file> OR --stdin")
+        print("Usage: python validate.py <file> OR --stdin")
         sys.exit(1)
 
     try:
@@ -39,19 +67,34 @@ def main() -> None:
         print(f"Error: Invalid JSON: {e}")
         sys.exit(1)
 
-    root = Path(__file__).resolve().parents[1]
+    skill_root = Path(__file__).resolve().parents[1]
+    schemas_dir = skill_root / "schemas"
+    deck_schema_path = schemas_dir / "deck.schema.json"
+    patch_schema_path = schemas_dir / "slide_patch.schema.json"
+
+    if not deck_schema_path.exists() or not patch_schema_path.exists():
+        print("❌ Error: Schema files not found.")
+        print(f"  Expected: {deck_schema_path}")
+        print(f"  Expected: {patch_schema_path}")
+        sys.exit(1)
     
     try:
-        if args.schema == "deck" or (not args.schema and "deck" in data):
+        if args.schema == "deck" or (not args.schema and ("deck" in data or ("headmatter" in data and "slides" in data))):
             print("Validating against DeckSpec...")
-            validate_json(data, root / "llm/schema/deck.schema.json")
-            if data.get("mode") != "build":
-                 print("Warning: 'mode' should be 'build' for strict output.")
-        elif args.schema == "patch" or (not args.schema and "patch" in data):
+            instance, warnings = _wrap_deck(data)
+            validate_json(instance, deck_schema_path)
+            for w in warnings:
+                print(f"⚠️  {w}")
+            if instance.get("mode") != "build":
+                print("⚠️  Top-level 'mode' should be 'build' for strict output.")
+        elif args.schema == "patch" or (not args.schema and ("patch" in data or {"no", "frontmatter", "content_md"} <= set(data.keys()))):
             print("Validating against SlidePatch...")
-            validate_json(data, root / "llm/schema/slide_patch.schema.json")
-            if data.get("mode") != "build":
-                 print("Warning: 'mode' should be 'build' for strict output.")
+            instance, warnings = _wrap_patch(data)
+            validate_json(instance, patch_schema_path)
+            for w in warnings:
+                print(f"⚠️  {w}")
+            if instance.get("mode") != "build":
+                print("⚠️  Top-level 'mode' should be 'build' for strict output.")
         else:
             print("Error: JSON must contain 'deck' or 'patch' root key, or specify --schema.")
             sys.exit(1)
@@ -61,6 +104,9 @@ def main() -> None:
     except ValidationError as e:
         print(f"❌ Validation Failed: {e.message}")
         print(f"Path: {e.json_path}")
+        sys.exit(1)
+    except ValueError as e:
+        print(f"❌ Validation Failed: {e}")
         sys.exit(1)
     except Exception as e:
         print(f"❌ Unexpected Error: {e}")

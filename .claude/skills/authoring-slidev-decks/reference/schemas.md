@@ -16,6 +16,6 @@ Used for defining the entire deck.
 ## Validation
 All JSON must pass:
 ```bash
-python tools/validate.py --stdin --schema [patch|deck]
+python .claude/skills/authoring-slidev-decks/scripts/validate.py --stdin --schema [patch|deck]
 ```
 Unknown keys will cause validation failure.

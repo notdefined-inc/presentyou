@@ -16,8 +16,38 @@
         },
         {
             "name": "validate_deck",
-            "description": "Validate a deck.json against the schema.",
+            "description": "Validate DeckSpec / SlidePatch JSON against the schema.",
             "command": "python3 .claude/skills/authoring-slidev-decks/scripts/validate.py"
+        },
+        {
+            "name": "slidev_introspect",
+            "description": "Print the local Slidev project's built-in layouts, components, and config keys (from node_modules).",
+            "command": "python3 .claude/skills/authoring-slidev-decks/scripts/slidev_introspect.py"
+        },
+        {
+            "name": "apply_patch",
+            "description": "Apply a SlidePatch JSON to a Slidev project deterministically.",
+            "command": "python3 .claude/skills/authoring-slidev-decks/scripts/apply_patch.py"
+        },
+        {
+            "name": "list_slides",
+            "description": "List slides in a Slidev project with titles.",
+            "command": "python3 .claude/skills/authoring-slidev-decks/scripts/list_slides.py"
+        },
+        {
+            "name": "read_slide",
+            "description": "Read a specific slide by number from a Slidev project.",
+            "command": "python3 .claude/skills/authoring-slidev-decks/scripts/read_slide.py"
+        },
+        {
+            "name": "audit_project",
+            "description": "Audit a Slidev project for broken slide references.",
+            "command": "python3 .claude/skills/authoring-slidev-decks/scripts/audit.py"
+        },
+        {
+            "name": "export_deck",
+            "description": "Export a Slidev project to PPTX/PDF/PNG deterministically.",
+            "command": "python3 .claude/skills/authoring-slidev-decks/scripts/export.py"
         }
     ],
     "author": "Claude",

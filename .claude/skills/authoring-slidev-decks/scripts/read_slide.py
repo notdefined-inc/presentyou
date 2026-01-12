@@ -9,13 +9,17 @@ from pathlib import Path
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--no", type=int, required=True, help="Slide number to read")
+    ap.add_argument("--project", "-p", required=True, help="Path to Slidev project directory")
     args = ap.parse_args()
 
-    root = Path(__file__).resolve().parents[1]
+    project_root = Path(args.project).resolve()
+    if not (project_root / "package.json").exists():
+        print(f"Error: Not a Slidev project (missing package.json): {project_root}")
+        sys.exit(1)
     
     # Simple check for filename pattern 00N.md
     filename = f"{args.no:03d}.md"
-    path = root / "slides" / filename
+    path = project_root / "slides" / filename
     
     if not path.exists():
         print(f"Error: Slide {args.no} not found at {filename}")

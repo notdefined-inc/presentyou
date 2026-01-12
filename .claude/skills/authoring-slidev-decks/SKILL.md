@@ -134,7 +134,8 @@ python .claude/skills/authoring-slidev-decks/scripts/read_slide.py --no 3 --proj
 
 **Export:**
 ```bash
-cd my-deck && npm run export
+python .claude/skills/authoring-slidev-decks/scripts/export.py --project ./my-deck --format pptx
+python .claude/skills/authoring-slidev-decks/scripts/export.py --project ./my-deck --format pdf
 ```
 
 ## Additional Resources
@@ -144,3 +145,4 @@ cd my-deck && npm run export
 - **Style guide**: [style-guide.md](reference/style-guide.md) - Layout and typography
 - **Brainstorm guide**: [brainstorm.md](reference/brainstorm.md) - Guided outline creation
 - **Themes**: [themes.md](reference/themes.md) - Curated color palettes
+- **Slidev options & built-ins**: [slidev-reference.md](reference/slidev-reference.md) - Version-accurate local sources + introspection script

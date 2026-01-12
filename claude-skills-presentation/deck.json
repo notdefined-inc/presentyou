@@ -1,4 +1,5 @@
 {
+    "mode": "build",
     "deck": {
         "headmatter": {
             "title": "Claude Skills",

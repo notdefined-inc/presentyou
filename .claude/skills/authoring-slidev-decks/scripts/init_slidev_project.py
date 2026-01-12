@@ -9,8 +9,8 @@ Creates only the basic Slidev project files:
 - assets/ (for images, etc.)
 - components/ (custom Vue components)
 
-The authoring-slidev-decks skill handles all orchestration,
-so no tools/ or llm/ directories are created in the project.
+The authoring-slidev-decks skill handles orchestration. The project includes
+an `llm/out/` directory for storing generated JSON/checkpoints.
 
 Usage:
   python init_slidev_project.py ./my-deck --name "my-presentation" [--install]
